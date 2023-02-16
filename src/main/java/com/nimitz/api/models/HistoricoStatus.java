@@ -10,20 +10,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="historicoStatus")
+@Table(name = "historicoStatus")
 public class HistoricoStatus implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	private String autorizador;
-	
-	private Date data;
-	
-	private long status;
+
+	private long data;
+
+	private short status;
 
 	public long getId() {
 		return id;
@@ -41,22 +41,20 @@ public class HistoricoStatus implements Serializable {
 		this.autorizador = autorizador;
 	}
 
-	public Date getData() {
+	public long getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(long data) {
 		this.data = data;
 	}
 
-	public long getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(long status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	
 
 }
