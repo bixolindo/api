@@ -1,5 +1,6 @@
 package com.nimitz.api.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,24 @@ public class StatusNfePageController {
 
 	private static final String ID_TABLE_STATUS = "ctl00_ContentPlaceHolder1_gdvDisponibilidade2";
 
+	private static final int INDEX_CABECALHO = 0;
+
+	private static final short BOM = 1;
+
+	private static final short MEDIO = 2;
+
+	private static final short RUIM = 3;
+
 	public List<HistoricoStatus> capturaHistoricosFromPage() throws Exception {
 		List<HistoricoStatus> historicos = new ArrayList<HistoricoStatus>();
 		Document nfePage = Jsoup.connect(URL_NFE_DISPONIBILIDADE).get();
 		Elements listaHistoricosHtml = nfePage.getElementById(ID_TABLE_STATUS).getElementsByTag("tbody").get(0)
 				.getElementsByTag("tr");
-		listaHistoricosHtml.remove(0); // REMOVE CABEÇALHO DA TABELA POIS NÃO NOS INTERRESSA
+		listaHistoricosHtml.remove(INDEX_CABECALHO); // REMOVE CABEÇALHO DA TABELA POIS NÃO NOS INTERRESSA
 
 		for (Element linhaStatus : listaHistoricosHtml) {
 			HistoricoStatus historico = new HistoricoStatus();
-			historico.setAutorizador(linhaStatus.getElementsByIndexEquals(0).text());
+			historico.setAutorizador(linhaStatus.getElementsByIndexEquals(0).text().trim());
 			historico.setData(System.currentTimeMillis());
 			historico.setStatus(getStatusByUrlmagem(linhaStatus));
 			historicos.add(historico);
@@ -45,11 +54,11 @@ public class StatusNfePageController {
 		String urlImagemStatus = linhaStatus.getElementsByTag("td").get(5).child(0).attr("src");
 		switch (urlImagemStatus) {
 		case "imagens/bola_verde_P.png":
-			return 1;
+			return BOM;
 		case "imagens/bola_amarela_P.png":
-			return 2;
+			return MEDIO;
 		default:
-			return 3;
+			return RUIM;
 		}
 	}
 
@@ -57,5 +66,26 @@ public class StatusNfePageController {
 		List<HistoricoStatus> historicos = capturaHistoricosFromPage();
 		repository.saveAll(historicos);
 		return historicos;
+	}
+
+	public List<HistoricoStatus> statusAtualServicoAllEstados() throws Exception {
+		return repository.statusAtualServicoAllEstados();
+	}
+
+	public HistoricoStatus findByEstado(String uf) throws Exception {
+		return repository.findByEstado(uf).get(0);
+	}
+
+	public List<HistoricoStatus> findByDateBetween(String dataInicio, String dataFim) throws Exception {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Long tsInicio = (dateFormat.parse(dataInicio)).getTime();
+		Long tsFim = (dateFormat.parse(dataFim)).getTime();
+		return repository.findByDateBetween(tsInicio, tsFim);
+	}
+
+	public String findWorst() throws Exception {
+		String resultado = repository.findWorst().get(0);
+		return resultado.substring(0, resultado.indexOf(","));
+
 	}
 }

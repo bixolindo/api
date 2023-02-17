@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,25 @@ public class HistoricoStatusResource {
 		return historicoStatusRepository.findAll();
 	}
 
-	@GetMapping("/salva-historicos")
-	public void visualizaDados() throws Exception {
-		controller.salvaHistoricosPeriodicamente();
+	@GetMapping("/status-atual")
+	public List<HistoricoStatus> statusAtualServicoAllEstados() throws Exception {
+		return controller.statusAtualServicoAllEstados();
+	}
+
+	@GetMapping("/status-atual/{uf}")
+	public HistoricoStatus findByEstado(@PathVariable(value = "uf") String uf) throws Exception {
+		return controller.findByEstado(uf);
+	}
+
+	@GetMapping("/status-atual/{dtInicio}/{dtFim}")
+	public List<HistoricoStatus> findByDateBetween(@PathVariable(value = "dtInicio") String dtInicio,
+			@PathVariable(value = "dtFim") String dtFim) throws Exception {
+		return controller.findByDateBetween(dtInicio, dtFim);
+	}
+
+	@GetMapping("/pior-estado")
+	public String findWorst() throws Exception {
+		return controller.findWorst();
 	}
 
 	@PostMapping("/historico")

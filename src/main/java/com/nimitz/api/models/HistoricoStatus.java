@@ -1,7 +1,6 @@
 package com.nimitz.api.models;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "historicoStatus")
+@Table(name = "historico_status")
 public class HistoricoStatus implements Serializable {
 
 	private static final long serialVersionUID = 1L;
