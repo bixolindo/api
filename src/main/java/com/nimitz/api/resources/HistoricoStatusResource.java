@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nimitz.api.controllers.StatusNfePageController;
 import com.nimitz.api.models.HistoricoStatus;
+import com.nimitz.api.models.PiorServicoDTO;
 import com.nimitz.api.repository.HistoricoStatusRepository;
 
 @RestController
@@ -46,7 +47,7 @@ public class HistoricoStatusResource {
 	}
 
 	@GetMapping("/pior-estado")
-	public String findWorst() throws Exception {
+	public PiorServicoDTO findWorst() throws Exception {
 		return controller.findWorst();
 	}
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nimitz.api.models.HistoricoStatus;
+import com.nimitz.api.models.PiorServicoDTO;
 import com.nimitz.api.repository.HistoricoStatusRepository;
 
 @Component
@@ -83,9 +84,15 @@ public class StatusNfePageController {
 		return repository.findByDateBetween(tsInicio, tsFim);
 	}
 
-	public String findWorst() throws Exception {
-		String resultado = repository.findWorst().get(0);
-		return resultado.substring(0, resultado.indexOf(","));
+	public PiorServicoDTO findWorst() throws Exception {
+		List<String> resultados = repository.findWorst();
+		PiorServicoDTO pior = new PiorServicoDTO();
+		if (!resultados.isEmpty()) {
+			String countString = resultados.get(0).substring(resultados.get(0).indexOf(",") + 1);
+			pior.setAutorizador(resultados.get(0).substring(0, resultados.get(0).indexOf(",")));
+			pior.setCount(Integer.parseInt(countString.trim()));
+		}
+		return pior;
 
 	}
 }
